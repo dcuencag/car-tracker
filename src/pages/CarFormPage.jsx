@@ -36,8 +36,10 @@ export default function CarFormPage({ defaultVehicleType = 'car' }) {
         await createCar(data)
       }
       navigate('/')
-    } catch {
-      setError('Error al guardar. Inténtalo de nuevo.')
+    } catch (e) {
+      console.error('Error al guardar vehículo:', e)
+      const msg = e?.message || e?.error_description || JSON.stringify(e)
+      setError(`Error al guardar: ${msg}`)
       setSaving(false)
     }
   }
