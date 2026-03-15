@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import MaintenanceForm from '../components/MaintenanceForm'
+import { getCarById } from '../hooks/useCars'
 import {
   createMaintenance,
   getMaintenanceById,
@@ -12,18 +13,23 @@ export default function MaintenanceFormPage() {
   const navigate = useNavigate()
   const isEditing = Boolean(mid)
 
+  const [vehicleType, setVehicleType] = useState('car')
   const [maintenance, setMaintenance] = useState(null)
-  const [loadingData, setLoadingData] = useState(isEditing)
+  const [loadingData, setLoadingData] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (!isEditing) return
-    getMaintenanceById(mid)
-      .then(setMaintenance)
-      .catch(() => setError('No se pudo cargar el mantenimiento'))
+    const promises = [
+      getCarById(carId).then(car => setVehicleType(car.vehicle_type ?? 'car')),
+      isEditing
+        ? getMaintenanceById(mid).then(setMaintenance)
+        : Promise.resolve(),
+    ]
+    Promise.all(promises)
+      .catch(() => setError('No se pudo cargar los datos'))
       .finally(() => setLoadingData(false))
-  }, [mid, isEditing])
+  }, [carId, mid, isEditing])
 
   async function handleSubmit(data) {
     setSaving(true)
@@ -72,6 +78,7 @@ export default function MaintenanceFormPage() {
         <div className="bg-white rounded-2xl shadow-sm p-5">
           <MaintenanceForm
             initialData={maintenance || undefined}
+            vehicleType={vehicleType}
             onSubmit={handleSubmit}
             onCancel={() => navigate(`/cars/${carId}`)}
             loading={saving}

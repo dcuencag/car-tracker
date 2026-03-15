@@ -9,6 +9,7 @@ const STATUS_CONFIG = {
 export default function CarCard({ car, status = 'green' }) {
   const navigate = useNavigate()
   const s = STATUS_CONFIG[status] ?? STATUS_CONFIG.green
+  const placeholder = car.vehicle_type === 'motorcycle' ? '🏍️' : '🚗'
 
   return (
     <div
@@ -24,7 +25,7 @@ export default function CarCard({ car, status = 'green' }) {
         />
       ) : (
         <div className="w-full h-44 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-          <span className="text-6xl">🚗</span>
+          <span className="text-6xl">{placeholder}</span>
         </div>
       )}
 
@@ -32,9 +33,7 @@ export default function CarCard({ car, status = 'green' }) {
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h2 className="font-bold text-gray-900 truncate">{car.brand} {car.model}</h2>
-            {car.plate && (
-              <p className="text-gray-500 text-sm font-mono">{car.plate}</p>
-            )}
+            {car.plate && <p className="text-gray-500 text-sm font-mono">{car.plate}</p>}
           </div>
           <span className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full shrink-0 ${s.bg} ${s.text}`}>
             <span className={`w-2 h-2 rounded-full ${s.dot}`} />
@@ -43,6 +42,7 @@ export default function CarCard({ car, status = 'green' }) {
         </div>
         <p className="text-blue-600 font-semibold text-sm mt-2">
           {car.current_km.toLocaleString()} km
+          {car.engine_cc ? <span className="text-gray-400 font-normal ml-2">{car.engine_cc} cc</span> : null}
         </p>
       </div>
     </div>

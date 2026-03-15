@@ -11,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<DashboardPage />} />
         <Route path="/cars/new" element={<CarFormPage />} />
+        <Route path="/motorcycles/new" element={<CarFormPage defaultVehicleType="motorcycle" />} />
         <Route path="/cars/:id" element={<CarDetailPage />} />
         <Route path="/cars/:id/edit" element={<CarFormPage />} />
         <Route path="/cars/:carId/maintenances/new" element={<MaintenanceFormPage />} />

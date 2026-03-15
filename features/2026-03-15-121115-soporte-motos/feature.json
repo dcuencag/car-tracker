@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "id": "2026-03-15-121115-soporte-motos",
+  "title": "Soporte para Motos",
+  "description": "Extender la app para soportar motos además de coches, con secciones separadas en el dashboard y campos adaptados a vehículos de dos ruedas.",
+  "original_request": "Extender la app Car Tracker para soportar también motos. El usuario quiere tener dos secciones separadas en el dashboard: una para coches y otra para motos. Misma funcionalidad que los coches (registro, mantenimientos, alertas por km/fecha, indicadores de estado), pero adaptada a motos con sus campos específicos. Reutilizar al máximo la infraestructura existente.",
+  "created_at": "2026-03-15T12:11:15Z",
+  "updated_at": "2026-03-15T13:00:00Z",
+  "status": "completed",
+  "progress": 100,
+  "current_phase": "completed",
+  "tasks": [
+    {
+      "id": "001",
+      "slug": "migracion-bd",
+      "title": "Migración de Base de Datos",
+      "status": "completed",
+      "priority": 1,
+      "requisito": "N/A",
+      "depends_on": []
+    },
+    {
+      "id": "002",
+      "slug": "crud-motos",
+      "title": "CRUD de Motos",
+      "status": "completed",
+      "priority": 1,
+      "requisito": "RF-01, RF-06, RF-07",
+      "depends_on": ["001"]
+    },
+    {
+      "id": "003",
+      "slug": "dashboard-pestanas",
+      "title": "Dashboard con Pestañas Coches / Motos",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-02, RF-03",
+      "depends_on": ["002"]
+    },
+    {
+      "id": "004",
+      "slug": "mantenimientos-moto",
+      "title": "Tipos de Mantenimiento para Motos",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-04, RF-05",
+      "depends_on": ["001"]
+    }
+  ]
+}
