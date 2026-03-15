@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { getTypesForVehicle } from '../utils/maintenanceTypes'
 
-const EMPTY = { type: 'oil', label: '', done_at: '', done_km: '', next_date: '', next_km: '', notes: '' }
+const EMPTY = { type: 'oil', label: '', done_at: '', done_km: '', next_date: '', next_km: '', notes: '', cost: '' }
 
 export default function MaintenanceForm({ initialData = EMPTY, vehicleType = 'car', onSubmit, onCancel, loading }) {
   const types = getTypesForVehicle(vehicleType)
@@ -15,6 +15,7 @@ export default function MaintenanceForm({ initialData = EMPTY, vehicleType = 'ca
     next_date: initialData.next_date ?? '',
     next_km:   initialData.next_km   ?? '',
     notes:     initialData.notes     ?? '',
+    cost:      initialData.cost      ?? '',
   })
 
   function handleChange(e) {
@@ -32,6 +33,7 @@ export default function MaintenanceForm({ initialData = EMPTY, vehicleType = 'ca
       next_date: values.next_date || null,
       next_km:   values.next_km   !== '' ? Number(values.next_km)   : null,
       notes:     values.notes.trim() || null,
+      cost:      values.cost      !== '' ? Number(values.cost)      : null,
     })
   }
 
@@ -101,11 +103,19 @@ export default function MaintenanceForm({ initialData = EMPTY, vehicleType = 'ca
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
-        <textarea name="notes" value={values.notes} onChange={handleChange} rows={2}
-          placeholder="Observaciones opcionales..."
-          className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Coste (€)</label>
+          <input type="number" name="cost" value={values.cost} onChange={handleChange}
+            placeholder="0.00" min="0" step="0.01"
+            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
+          <input name="notes" value={values.notes} onChange={handleChange}
+            placeholder="Observaciones..."
+            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
       </div>
 
       <div className="flex gap-3 pt-1">

@@ -20,9 +20,16 @@ export default function MaintenanceItem({ maintenance, onEdit, onDelete }) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className={`font-semibold text-sm ${t.color}`}>
-          {getTypeLabel(maintenance.type, maintenance.label)}
-        </p>
+        <div className="flex items-center justify-between gap-2">
+          <p className={`font-semibold text-sm ${t.color}`}>
+            {getTypeLabel(maintenance.type, maintenance.label)}
+          </p>
+          {maintenance.cost != null && (
+            <span className="text-sm font-bold text-emerald-600 shrink-0">
+              {Number(maintenance.cost).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+            </span>
+          )}
+        </div>
 
         <div className="text-xs text-gray-500 mt-0.5 space-y-0.5">
           {maintenance.done_at && (

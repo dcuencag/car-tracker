@@ -4,18 +4,25 @@ import CarCard from '../components/CarCard'
 import { useAuth } from '../contexts/AuthContext'
 import { getCars } from '../hooks/useCars'
 import { getMaintenancesByCar } from '../hooks/useMaintenances'
-import { getCarStatus } from '../utils/alertLogic'
+import { getCarStatus, getMaintenanceStatus } from '../utils/alertLogic'
+import { MAINTENANCE_TYPES, getTypeLabel } from '../utils/maintenanceTypes'
 
 const TABS = [
   { key: 'car',        label: 'Coches',  icon: '🚗', newRoute: '/cars/new',         emptyText: 'coches',  addLabel: 'Añadir mi primer coche'  },
   { key: 'motorcycle', label: 'Motos',   icon: '🏍️', newRoute: '/motorcycles/new',  emptyText: 'motos',   addLabel: 'Añadir mi primera moto'  },
 ]
 
+const STATUS_CONFIG = {
+  red:    { bg: 'bg-red-50',    text: 'text-red-700',    dot: 'bg-red-500'    },
+  yellow: { bg: 'bg-yellow-50', text: 'text-yellow-700', dot: 'bg-yellow-500' },
+}
+
 export default function DashboardPage() {
   const navigate = useNavigate()
   const { user, signOut } = useAuth()
   const [vehicles, setVehicles] = useState([])
   const [statusMap, setStatusMap] = useState({})
+  const [alerts, setAlerts] = useState([]) // { vehicle, maintenance, status }
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('car')
 
@@ -23,12 +30,21 @@ export default function DashboardPage() {
     getCars()
       .then(async (data) => {
         setVehicles(data)
+        const allAlerts = []
         const entries = await Promise.all(
           data.map(async (car) => {
             const maintenances = await getMaintenancesByCar(car.id)
+            maintenances.forEach(m => {
+              const s = getMaintenanceStatus(car, m)
+              if (s === 'red' || s === 'yellow') {
+                allAlerts.push({ vehicle: car, maintenance: m, status: s })
+              }
+            })
             return [car.id, getCarStatus(car, maintenances)]
           })
         )
+        allAlerts.sort((a, b) => (a.status === 'red' ? -1 : 1) - (b.status === 'red' ? -1 : 1))
+        setAlerts(allAlerts)
         setStatusMap(Object.fromEntries(entries))
       })
       .catch(console.error)
@@ -63,13 +79,48 @@ export default function DashboardPage() {
         {/* User bar */}
         <div className="flex items-center justify-between bg-white rounded-xl px-4 py-2 mb-4 shadow-sm">
           <p className="text-xs text-gray-500 truncate max-w-[200px]">{user?.email}</p>
-          <button
-            onClick={signOut}
-            className="text-xs text-red-500 font-medium shrink-0 ml-2"
-          >
+          <button onClick={signOut} className="text-xs text-red-500 font-medium shrink-0 ml-2">
             Salir
           </button>
         </div>
+
+        {/* Recordatorios urgentes */}
+        {alerts.length > 0 && (
+          <div className="bg-white rounded-2xl shadow-sm p-4 mb-4">
+            <h2 className="font-bold text-gray-900 text-sm mb-3">
+              Pendiente de atención
+              <span className="ml-2 bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                {alerts.length}
+              </span>
+            </h2>
+            <div className="space-y-2">
+              {alerts.map(({ vehicle, maintenance, status }) => {
+                const s = STATUS_CONFIG[status]
+                const t = MAINTENANCE_TYPES[maintenance.type] ?? MAINTENANCE_TYPES.custom
+                return (
+                  <div
+                    key={`${vehicle.id}-${maintenance.id}`}
+                    onClick={() => navigate(`/cars/${vehicle.id}`)}
+                    className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer active:opacity-70 ${s.bg}`}
+                  >
+                    <span className="text-base">{t.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-xs font-semibold ${s.text}`}>
+                        {getTypeLabel(maintenance.type, maintenance.label)}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {vehicle.brand} {vehicle.model}
+                        {maintenance.next_date && ` · ${new Date(maintenance.next_date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}`}
+                        {maintenance.next_km && ` · ${maintenance.next_km.toLocaleString()} km`}
+                      </p>
+                    </div>
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${s.dot}`} />
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Pestañas */}
         <div className="flex bg-gray-200 rounded-xl p-1 mb-6">

@@ -1,3 +1,5 @@
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ConfirmDialog from '../components/ConfirmDialog'
@@ -12,6 +14,15 @@ const STATUS_CONFIG = {
   green:  { bg: 'bg-green-100',  text: 'text-green-700',  dot: 'bg-green-500',  label: 'Al día'           },
   yellow: { bg: 'bg-yellow-100', text: 'text-yellow-700', dot: 'bg-yellow-500', label: 'Revisión próxima' },
   red:    { bg: 'bg-red-100',    text: 'text-red-700',    dot: 'bg-red-500',    label: 'Revisión vencida' },
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '—'
+  return new Date(dateStr).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })
+}
+
+function formatEur(val) {
+  return Number(val).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
 }
 
 export default function CarDetailPage() {
@@ -78,6 +89,43 @@ export default function CarDetailPage() {
     }
   }
 
+  function exportPDF() {
+    const doc = new jsPDF()
+    const title = `${car.brand} ${car.model}${car.year ? ` (${car.year})` : ''}`
+
+    doc.setFontSize(18)
+    doc.text(title, 14, 20)
+
+    doc.setFontSize(11)
+    doc.setTextColor(100)
+    const infoLines = [
+      car.plate ? `Matrícula: ${car.plate}` : null,
+      `Kilometraje actual: ${car.current_km.toLocaleString()} km`,
+      car.engine_cc ? `Cilindrada: ${car.engine_cc} cc` : null,
+      totalCost > 0 ? `Gasto total registrado: ${formatEur(totalCost)}` : null,
+    ].filter(Boolean)
+    infoLines.forEach((line, i) => doc.text(line, 14, 30 + i * 7))
+
+    const rows = maintenances.map(m => [
+      getTypeLabel(m.type, m.label),
+      formatDate(m.done_at),
+      m.done_km ? `${m.done_km.toLocaleString()} km` : '—',
+      m.next_date ? formatDate(m.next_date) : (m.next_km ? `${m.next_km.toLocaleString()} km` : '—'),
+      m.cost != null ? formatEur(m.cost) : '—',
+      m.notes || '—',
+    ])
+
+    autoTable(doc, {
+      startY: 30 + infoLines.length * 7 + 8,
+      head: [['Tipo', 'Realizado', 'Km', 'Próximo', 'Coste', 'Notas']],
+      body: rows,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [37, 99, 235] },
+    })
+
+    doc.save(`${car.brand}_${car.model}_mantenimiento.pdf`)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -99,15 +147,24 @@ export default function CarDetailPage() {
 
   const carStatus = getCarStatus(car, maintenances)
   const statusCfg = STATUS_CONFIG[carStatus]
+  const isMoto = car.vehicle_type === 'motorcycle'
 
-  // Upcoming: maintenances with next_date or next_km, sorted by urgency
   const upcoming = maintenances
     .filter(m => m.next_km !== null || m.next_date !== null)
     .map(m => ({ ...m, _status: getMaintenanceStatus(car, m) }))
-    .sort((a, b) => {
-      const order = { red: 0, yellow: 1, green: 2 }
-      return order[a._status] - order[b._status]
-    })
+    .sort((a, b) => ({ red: 0, yellow: 1, green: 2 }[a._status] - { red: 0, yellow: 1, green: 2 }[b._status]))
+
+  // Estadísticas de gastos
+  const maintWithCost = maintenances.filter(m => m.cost != null)
+  const totalCost = maintWithCost.reduce((sum, m) => sum + Number(m.cost), 0)
+  const costByType = maintWithCost.reduce((acc, m) => {
+    const key = m.type
+    acc[key] = (acc[key] || 0) + Number(m.cost)
+    return acc
+  }, {})
+  const topCosts = Object.entries(costByType)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -126,7 +183,7 @@ export default function CarDetailPage() {
           />
         ) : (
           <div className="w-full h-52 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
-            <span className="text-7xl">🚗</span>
+            <span className="text-7xl">{isMoto ? '🏍️' : '🚗'}</span>
           </div>
         )}
 
@@ -146,7 +203,9 @@ export default function CarDetailPage() {
           <div className="flex items-center justify-between">
             <div>
               {car.year && <p className="text-sm text-gray-500">Año {car.year}</p>}
-              <p className="text-blue-600 font-bold text-lg">{car.current_km.toLocaleString()} km</p>
+              <p className="text-blue-600 font-bold text-lg">{car.current_km.toLocaleString()} km
+                {car.engine_cc ? <span className="text-gray-400 font-normal text-sm ml-2">{car.engine_cc} cc</span> : null}
+              </p>
             </div>
             <button
               onClick={() => setShowKmModal(true)}
@@ -175,7 +234,7 @@ export default function CarDetailPage() {
                         {getTypeLabel(m.type, m.label)}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {m.next_date && new Date(m.next_date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        {m.next_date && formatDate(m.next_date)}
                         {m.next_date && m.next_km && ' · '}
                         {m.next_km && `${m.next_km.toLocaleString()} km`}
                       </p>
@@ -188,6 +247,36 @@ export default function CarDetailPage() {
           </div>
         )}
 
+        {/* Estadísticas de gastos */}
+        {maintWithCost.length > 0 && (
+          <div className="bg-white rounded-2xl shadow-sm p-5">
+            <h2 className="font-bold text-gray-900 mb-3">Gastos registrados</h2>
+            <div className="flex items-baseline gap-1 mb-4">
+              <span className="text-3xl font-bold text-emerald-600">{formatEur(totalCost)}</span>
+              <span className="text-sm text-gray-400">total</span>
+            </div>
+            {topCosts.length > 0 && (
+              <div className="space-y-2">
+                {topCosts.map(([type, amount]) => {
+                  const t = MAINTENANCE_TYPES[type] ?? MAINTENANCE_TYPES.custom
+                  const pct = Math.round((amount / totalCost) * 100)
+                  return (
+                    <div key={type}>
+                      <div className="flex items-center justify-between text-xs mb-1">
+                        <span className="text-gray-600">{t.icon} {t.label}</span>
+                        <span className="font-semibold text-gray-800">{formatEur(amount)}</span>
+                      </div>
+                      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-400 rounded-full" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Historial */}
         <MaintenanceList
           maintenances={maintenances}
@@ -196,13 +285,19 @@ export default function CarDetailPage() {
           onDelete={handleDeleteMaintenance}
         />
 
-        {/* Acciones coche */}
-        <div className="flex gap-3 pb-4">
+        {/* Acciones */}
+        <div className="flex gap-3">
           <button
             onClick={() => navigate(`/cars/${id}/edit`)}
             className="flex-1 bg-blue-600 text-white rounded-xl py-3 text-sm font-medium"
           >
-            Editar coche
+            Editar
+          </button>
+          <button
+            onClick={exportPDF}
+            className="flex-1 bg-emerald-600 text-white rounded-xl py-3 text-sm font-medium"
+          >
+            Exportar PDF
           </button>
           <button
             onClick={() => setShowDeleteCar(true)}
