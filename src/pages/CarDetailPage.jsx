@@ -8,6 +8,7 @@ import UpdateKmModal from '../components/UpdateKmModal'
 import { deleteCar, getCarById, updateCar } from '../hooks/useCars'
 import { deleteMaintenance, getMaintenancesByCar } from '../hooks/useMaintenances'
 import { getCarStatus, getMaintenanceStatus } from '../utils/alertLogic'
+import { ITV_STATUS_CONFIG, getITVSchedule } from '../utils/itvLogic'
 import { MAINTENANCE_TYPES, getTypeLabel } from '../utils/maintenanceTypes'
 
 const STATUS_CONFIG = {
@@ -149,6 +150,9 @@ export default function CarDetailPage() {
   const statusCfg = STATUS_CONFIG[carStatus]
   const isMoto = car.vehicle_type === 'motorcycle'
 
+  const itvSchedule = getITVSchedule(car.year, car.vehicle_type)
+  const itvCfg = itvSchedule ? ITV_STATUS_CONFIG[itvSchedule.status] : null
+
   const upcoming = maintenances
     .filter(m => m.next_km !== null || m.next_date !== null)
     .map(m => ({ ...m, _status: getMaintenanceStatus(car, m) }))
@@ -217,6 +221,31 @@ export default function CarDetailPage() {
 
           {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
         </div>
+
+        {/* ITV */}
+        {itvSchedule && car.year && (
+          <div className={`rounded-2xl shadow-sm p-4 ${itvCfg.bg}`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className={`text-xs font-semibold uppercase tracking-wide mb-0.5 ${itvCfg.text}`}>ITV</p>
+                <p className={`font-bold text-sm ${itvCfg.text}`}>{itvSchedule.label}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{itvSchedule.detail}</p>
+              </div>
+              <div className="text-right">
+                {itvSchedule.daysUntil != null && (
+                  <p className={`text-2xl font-extrabold ${itvCfg.text}`}>
+                    {itvSchedule.daysUntil < 0
+                      ? `${Math.abs(itvSchedule.daysUntil)}d`
+                      : `${itvSchedule.daysUntil}d`}
+                  </p>
+                )}
+                <p className="text-xs text-gray-400">
+                  {itvSchedule.daysUntil < 0 ? 'vencida' : 'restantes'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Próximas revisiones */}
         {upcoming.length > 0 && (

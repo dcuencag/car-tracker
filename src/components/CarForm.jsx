@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { lookupPlate } from '../services/plateService'
 
 const EMPTY = { brand: '', model: '', year: '', plate: '', current_km: '', engine_cc: '' }
 
@@ -17,6 +18,33 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
   const [errors, setErrors] = useState({})
   const [photoFile, setPhotoFile] = useState(null)
   const [photoPreview, setPhotoPreview] = useState(initialData.photo_url ?? null)
+  const [plateQuery, setPlateQuery] = useState('')
+  const [lookingUp, setLookingUp] = useState(false)
+  const [lookupError, setLookupError] = useState(null)
+  const [lookupSuccess, setLookupSuccess] = useState(false)
+
+  async function handleLookup() {
+    if (!plateQuery.trim()) return
+    setLookingUp(true)
+    setLookupError(null)
+    setLookupSuccess(false)
+    try {
+      const data = await lookupPlate(plateQuery.trim())
+      setValues(v => ({
+        ...v,
+        brand:     data.brand     || v.brand,
+        model:     data.model     || v.model,
+        year:      data.year      ?? v.year,
+        plate:     plateQuery.trim().toUpperCase(),
+        engine_cc: data.engine_cc ?? v.engine_cc,
+      }))
+      setLookupSuccess(true)
+    } catch (e) {
+      setLookupError(e.message)
+    } finally {
+      setLookingUp(false)
+    }
+  }
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -103,6 +131,31 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
           className="hidden"
           onChange={handlePhotoChange}
         />
+      </div>
+
+      {/* Búsqueda por matrícula */}
+      <div className="bg-blue-50 rounded-xl p-4 space-y-2">
+        <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide">Rellenar desde matrícula</p>
+        <div className="flex gap-2">
+          <input
+            value={plateQuery}
+            onChange={e => setPlateQuery(e.target.value.toUpperCase())}
+            onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleLookup())}
+            placeholder="1234 ABC"
+            maxLength={10}
+            className="flex-1 border border-blue-200 bg-white rounded-xl px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
+          />
+          <button
+            type="button"
+            onClick={handleLookup}
+            disabled={lookingUp || !plateQuery.trim()}
+            className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium disabled:opacity-50 shrink-0"
+          >
+            {lookingUp ? '...' : 'Buscar'}
+          </button>
+        </div>
+        {lookupSuccess && <p className="text-xs text-green-700 font-medium">Datos encontrados y rellenados automáticamente.</p>}
+        {lookupError  && <p className="text-xs text-red-600">{lookupError}</p>}
       </div>
 
       <div>
