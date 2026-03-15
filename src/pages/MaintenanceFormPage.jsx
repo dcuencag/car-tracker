@@ -49,14 +49,14 @@ export default function MaintenanceFormPage() {
 
   if (loadingData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <p className="text-gray-400">Cargando...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-lg mx-auto px-4 py-6">
         <button
           onClick={() => navigate(`/cars/${carId}`)}
@@ -65,7 +65,7 @@ export default function MaintenanceFormPage() {
           ← Volver
         </button>
 
-        <h1 className="text-xl font-bold text-gray-900 mb-6">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
           {isEditing ? 'Editar mantenimiento' : 'Añadir mantenimiento'}
         </h1>
 
@@ -75,7 +75,7 @@ export default function MaintenanceFormPage() {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
           <MaintenanceForm
             initialData={maintenance || undefined}
             vehicleType={vehicleType}

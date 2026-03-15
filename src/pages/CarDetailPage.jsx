@@ -129,7 +129,7 @@ export default function CarDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <p className="text-gray-400">Cargando...</p>
       </div>
     )
@@ -137,9 +137,9 @@ export default function CarDetailPage() {
 
   if (error && !car) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
           <button onClick={() => navigate('/')} className="text-blue-600 text-sm">← Volver</button>
         </div>
       </div>
@@ -158,7 +158,6 @@ export default function CarDetailPage() {
     .map(m => ({ ...m, _status: getMaintenanceStatus(car, m) }))
     .sort((a, b) => ({ red: 0, yellow: 1, green: 2 }[a._status] - { red: 0, yellow: 1, green: 2 }[b._status]))
 
-  // Estadísticas de gastos
   const maintWithCost = maintenances.filter(m => m.cost != null)
   const totalCost = maintWithCost.reduce((sum, m) => sum + Number(m.cost), 0)
   const costByType = maintWithCost.reduce((acc, m) => {
@@ -171,7 +170,7 @@ export default function CarDetailPage() {
     .slice(0, 4)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-lg mx-auto px-4 py-6 space-y-4">
         <button onClick={() => navigate('/')} className="text-blue-600 text-sm flex items-center gap-1">
           ← Volver
@@ -186,17 +185,17 @@ export default function CarDetailPage() {
             className="w-full h-52 object-cover rounded-2xl"
           />
         ) : (
-          <div className="w-full h-52 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+          <div className="w-full h-52 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl flex items-center justify-center">
             <span className="text-7xl">{isMoto ? '🏍️' : '🚗'}</span>
           </div>
         )}
 
         {/* Info + estado */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
           <div className="flex items-start justify-between gap-2 mb-3">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{car.brand} {car.model}</h1>
-              {car.plate && <p className="text-gray-500 text-sm font-mono mt-0.5">{car.plate}</p>}
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{car.brand} {car.model}</h1>
+              {car.plate && <p className="text-gray-500 dark:text-gray-400 text-sm font-mono mt-0.5">{car.plate}</p>}
             </div>
             <span className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full shrink-0 ${statusCfg.bg} ${statusCfg.text}`}>
               <span className={`w-2 h-2 rounded-full ${statusCfg.dot}`} />
@@ -206,14 +205,14 @@ export default function CarDetailPage() {
 
           <div className="flex items-center justify-between">
             <div>
-              {car.year && <p className="text-sm text-gray-500">Año {car.year}</p>}
+              {car.year && <p className="text-sm text-gray-500 dark:text-gray-400">Año {car.year}</p>}
               <p className="text-blue-600 font-bold text-lg">{car.current_km.toLocaleString()} km
-                {car.engine_cc ? <span className="text-gray-400 font-normal text-sm ml-2">{car.engine_cc} cc</span> : null}
+                {car.engine_cc ? <span className="text-gray-400 dark:text-gray-500 font-normal text-sm ml-2">{car.engine_cc} cc</span> : null}
               </p>
             </div>
             <button
               onClick={() => setShowKmModal(true)}
-              className="text-sm text-blue-600 border border-blue-200 px-3 py-2 rounded-xl font-medium"
+              className="text-sm text-blue-600 border border-blue-200 dark:border-blue-800 px-3 py-2 rounded-xl font-medium"
             >
               Actualizar km
             </button>
@@ -249,8 +248,8 @@ export default function CarDetailPage() {
 
         {/* Próximas revisiones */}
         {upcoming.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm p-5">
-            <h2 className="font-bold text-gray-900 mb-3">Próximas revisiones</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+            <h2 className="font-bold text-gray-900 dark:text-white mb-3">Próximas revisiones</h2>
             <div className="space-y-2">
               {upcoming.map(m => {
                 const s = STATUS_CONFIG[m._status]
@@ -278,8 +277,8 @@ export default function CarDetailPage() {
 
         {/* Estadísticas de gastos */}
         {maintWithCost.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm p-5">
-            <h2 className="font-bold text-gray-900 mb-3">Gastos registrados</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+            <h2 className="font-bold text-gray-900 dark:text-white mb-3">Gastos registrados</h2>
             <div className="flex items-baseline gap-1 mb-4">
               <span className="text-3xl font-bold text-emerald-600">{formatEur(totalCost)}</span>
               <span className="text-sm text-gray-400">total</span>
@@ -292,10 +291,10 @@ export default function CarDetailPage() {
                   return (
                     <div key={type}>
                       <div className="flex items-center justify-between text-xs mb-1">
-                        <span className="text-gray-600">{t.icon} {t.label}</span>
-                        <span className="font-semibold text-gray-800">{formatEur(amount)}</span>
+                        <span className="text-gray-600 dark:text-gray-400">{t.icon} {t.label}</span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200">{formatEur(amount)}</span>
                       </div>
-                      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                         <div className="h-full bg-emerald-400 rounded-full" style={{ width: `${pct}%` }} />
                       </div>
                     </div>

@@ -61,17 +61,19 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
   }
 
   const inputCls = (field) =>
-    `w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-      errors[field] ? 'border-red-400' : 'border-gray-300'
+    `w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+      errors[field] ? 'border-red-400' : 'border-gray-300 dark:border-gray-600'
     }`
+
+  const baseInputCls = 'w-full border border-gray-300 dark:border-gray-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500'
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Foto */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Foto</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Foto</label>
         <div
-          className="relative w-full h-44 rounded-xl overflow-hidden bg-gray-100 cursor-pointer border-2 border-dashed border-gray-300 hover:border-blue-400 active:opacity-80 transition-colors"
+          className="relative w-full h-44 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 cursor-pointer border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-400 active:opacity-80 transition-colors"
           onClick={() => fileInputRef.current?.click()}
         >
           {photoPreview ? (
@@ -84,7 +86,7 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
               </div>
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full gap-2 text-gray-400">
+            <div className="flex flex-col items-center justify-center h-full gap-2 text-gray-400 dark:text-gray-500">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -92,7 +94,7 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
                   d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <span className="text-sm">Toca para añadir foto</span>
-              <span className="text-xs text-gray-300">Cámara o galería</span>
+              <span className="text-xs text-gray-300 dark:text-gray-600">Cámara o galería</span>
             </div>
           )}
         </div>
@@ -106,7 +108,7 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Marca <span className="text-red-500">*</span>
         </label>
         <input
@@ -118,7 +120,7 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Modelo <span className="text-red-500">*</span>
         </label>
         <input
@@ -131,26 +133,26 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Año</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Año</label>
           <input
             name="year" type="number" value={values.year} onChange={handleChange}
             placeholder="2020" min="1900" max="2099"
-            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={baseInputCls}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Matrícula</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Matrícula</label>
           <input
             name="plate" value={values.plate} onChange={handleChange}
             placeholder="1234 ABC"
-            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={baseInputCls}
           />
         </div>
       </div>
 
       <div className={`grid gap-4 ${isMoto ? 'grid-cols-2' : ''}`}>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Kilometraje actual <span className="text-red-500">*</span>
           </label>
           <input
@@ -163,11 +165,11 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
 
         {isMoto && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Cilindrada (cc)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cilindrada (cc)</label>
             <input
               name="engine_cc" type="number" value={values.engine_cc} onChange={handleChange}
               placeholder="650" min="0"
-              className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={baseInputCls}
             />
           </div>
         )}
@@ -175,7 +177,7 @@ export default function CarForm({ initialData = EMPTY, vehicleType = 'car', onSu
 
       <div className="flex gap-3 pt-2">
         <button type="button" onClick={onCancel}
-          className="flex-1 border border-gray-300 text-gray-700 rounded-xl py-2 text-sm hover:bg-gray-50">
+          className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700">
           Cancelar
         </button>
         <button type="submit" disabled={loading}

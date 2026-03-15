@@ -110,18 +110,18 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <p className="text-gray-400">Cargando...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-lg mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-gray-900">Mis vehículos</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mis vehículos</h1>
           <button
             onClick={() => navigate(tab.newRoute)}
             className="bg-blue-600 text-white rounded-full w-11 h-11 flex items-center justify-center text-2xl shadow-md active:scale-95"
@@ -131,15 +131,15 @@ export default function DashboardPage() {
         </div>
 
         {/* User bar */}
-        <div className="flex items-center justify-between bg-white rounded-xl px-4 py-2 mb-4 shadow-sm">
-          <p className="text-xs text-gray-500 truncate max-w-[200px]">{user?.email}</p>
+        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl px-4 py-2 mb-4 shadow-sm">
+          <p className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[200px]">{user?.email}</p>
           <UserMenu onExportAll={exportAll} exporting={exporting} />
         </div>
 
         {/* Recordatorios urgentes */}
         {alerts.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-sm p-4 mb-4">
-            <h2 className="font-bold text-gray-900 text-sm mb-3">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 mb-4">
+            <h2 className="font-bold text-gray-900 dark:text-white text-sm mb-3">
               Pendiente de atención
               <span className="ml-2 bg-red-100 text-red-700 text-xs font-semibold px-2 py-0.5 rounded-full">
                 {alerts.length}
@@ -175,22 +175,22 @@ export default function DashboardPage() {
         )}
 
         {/* Pestañas */}
-        <div className="flex bg-gray-200 rounded-xl p-1 mb-6">
+        <div className="flex bg-gray-200 dark:bg-gray-700 rounded-xl p-1 mb-6">
           {TABS.map(t => (
             <button
               key={t.key}
               onClick={() => setActiveTab(t.key)}
               className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-semibold transition-colors ${
                 activeTab === t.key
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500'
+                  ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400'
               }`}
             >
               <span>{t.icon}</span>
               {t.label}
               {vehicles.filter(v => (v.vehicle_type ?? 'car') === t.key).length > 0 && (
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                  activeTab === t.key ? 'bg-blue-100 text-blue-700' : 'bg-gray-300 text-gray-600'
+                  activeTab === t.key ? 'bg-blue-100 text-blue-700' : 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-300'
                 }`}>
                   {vehicles.filter(v => (v.vehicle_type ?? 'car') === t.key).length}
                 </span>
@@ -203,8 +203,8 @@ export default function DashboardPage() {
         {filtered.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-6xl mb-4">{tab.icon}</p>
-            <h2 className="text-xl font-semibold text-gray-700 mb-2">Aún no tienes {tab.emptyText}</h2>
-            <p className="text-gray-500 text-sm mb-8 max-w-xs mx-auto">
+            <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Aún no tienes {tab.emptyText}</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8 max-w-xs mx-auto">
               Añade {tab.key === 'car' ? 'tu primer coche' : 'tu primera moto'} para llevar el control de su mantenimiento
             </p>
             <button

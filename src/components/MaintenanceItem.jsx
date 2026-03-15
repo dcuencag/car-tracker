@@ -14,7 +14,7 @@ export default function MaintenanceItem({ maintenance, onEdit, onDelete }) {
   }
 
   return (
-    <div className="flex gap-3 py-3 border-b border-gray-100 last:border-0">
+    <div className="flex gap-3 py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${t.bg}`}>
         <span className="text-lg">{t.icon}</span>
       </div>
@@ -31,7 +31,7 @@ export default function MaintenanceItem({ maintenance, onEdit, onDelete }) {
           )}
         </div>
 
-        <div className="text-xs text-gray-500 mt-0.5 space-y-0.5">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 space-y-0.5">
           {maintenance.done_at && (
             <p>Realizado: {formatDate(maintenance.done_at)}{maintenance.done_km ? ` · ${maintenance.done_km.toLocaleString()} km` : ''}</p>
           )}
@@ -44,7 +44,7 @@ export default function MaintenanceItem({ maintenance, onEdit, onDelete }) {
             </p>
           )}
           {maintenance.notes && (
-            <p className="text-gray-400 italic truncate">{maintenance.notes}</p>
+            <p className="text-gray-400 dark:text-gray-500 italic truncate">{maintenance.notes}</p>
           )}
         </div>
       </div>
@@ -52,13 +52,13 @@ export default function MaintenanceItem({ maintenance, onEdit, onDelete }) {
       <div className="flex flex-col gap-1 shrink-0">
         <button
           onClick={() => onEdit(maintenance)}
-          className="text-xs text-blue-600 px-2 py-1 rounded-lg hover:bg-blue-50"
+          className="text-xs text-blue-600 px-2 py-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20"
         >
           Editar
         </button>
         <button
           onClick={() => setShowConfirm(true)}
-          className="text-xs text-red-500 px-2 py-1 rounded-lg hover:bg-red-50"
+          className="text-xs text-red-500 px-2 py-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20"
         >
           Borrar
         </button>

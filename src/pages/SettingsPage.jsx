@@ -29,22 +29,28 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-lg mx-auto px-4 py-6 space-y-4">
         <button onClick={() => navigate('/')} className="text-blue-600 text-sm flex items-center gap-1">
           ← Volver
         </button>
 
-        <h1 className="text-xl font-bold text-gray-900">Ajustes</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Ajustes</h1>
 
         {/* Moneda */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <h2 className="font-bold text-gray-900 mb-3">Moneda</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+          <h2 className="font-bold text-gray-900 dark:text-white mb-3">Moneda</h2>
           <div className="space-y-2">
             {CURRENCIES.map(c => (
-              <label key={c.code} className="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors"
-                style={{ borderColor: currency === c.code ? '#2563eb' : '#e5e7eb', background: currency === c.code ? '#eff6ff' : 'white' }}>
-                <span className="text-sm text-gray-800">{c.symbol} {c.label}</span>
+              <label
+                key={c.code}
+                className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
+                  currency === c.code
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700'
+                }`}
+              >
+                <span className="text-sm text-gray-800 dark:text-gray-200">{c.symbol} {c.label}</span>
                 <input
                   type="radio"
                   name="currency"
@@ -59,13 +65,19 @@ export default function SettingsPage() {
         </div>
 
         {/* Unidades */}
-        <div className="bg-white rounded-2xl shadow-sm p-5">
-          <h2 className="font-bold text-gray-900 mb-3">Unidad de distancia</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-5">
+          <h2 className="font-bold text-gray-900 dark:text-white mb-3">Unidad de distancia</h2>
           <div className="space-y-2">
             {UNITS.map(u => (
-              <label key={u.key} className="flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors"
-                style={{ borderColor: unit === u.key ? '#2563eb' : '#e5e7eb', background: unit === u.key ? '#eff6ff' : 'white' }}>
-                <span className="text-sm text-gray-800">{u.label}</span>
+              <label
+                key={u.key}
+                className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
+                  unit === u.key
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                    : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700'
+                }`}
+              >
+                <span className="text-sm text-gray-800 dark:text-gray-200">{u.label}</span>
                 <input
                   type="radio"
                   name="unit"
@@ -84,7 +96,7 @@ export default function SettingsPage() {
           onClick={handleSave}
           className="w-full bg-blue-600 text-white rounded-xl py-3 text-sm font-medium"
         >
-          {saved ? 'Guardado' : 'Guardar ajustes'}
+          {saved ? 'Guardado ✓' : 'Guardar ajustes'}
         </button>
       </div>
     </div>
