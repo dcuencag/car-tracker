@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import CarForm from '../components/CarForm'
-import { createCar, getCarById, updateCar } from '../hooks/useCars'
+import { createCar, getCarById, updateCar, uploadCarPhoto } from '../hooks/useCars'
+import { supabase } from '../lib/supabase'
 
 export default function CarFormPage({ defaultVehicleType = 'car' }) {
   const { id } = useParams()
@@ -27,13 +28,18 @@ export default function CarFormPage({ defaultVehicleType = 'car' }) {
   const label = isMoto ? 'moto' : 'coche'
 
   async function handleSubmit(data) {
+    const { _photoFile, ...carData } = data
     setSaving(true)
     setError(null)
     try {
+      if (_photoFile) {
+        const { data: { user } } = await supabase.auth.getUser()
+        carData.photo_url = await uploadCarPhoto(_photoFile, user.id)
+      }
       if (isEditing) {
-        await updateCar(id, data)
+        await updateCar(id, carData)
       } else {
-        await createCar(data)
+        await createCar(carData)
       }
       navigate('/')
     } catch (e) {
