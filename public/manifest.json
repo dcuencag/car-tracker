@@ -1,6 +1,6 @@
 {
-  "name": "SanzClima — Mis Vehículos",
-  "short_name": "SanzClima",
+  "name": "PitStop — Mis Vehículos",
+  "short_name": "PitStop",
   "description": "Controla el mantenimiento de tus coches y motos",
   "start_url": "/",
   "display": "standalone",
