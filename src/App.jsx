@@ -5,7 +5,10 @@ import CarFormPage from './pages/CarFormPage'
 import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
 import MaintenanceFormPage from './pages/MaintenanceFormPage'
+import ProfilePage from './pages/ProfilePage'
 import RegisterPage from './pages/RegisterPage'
+import SettingsPage from './pages/SettingsPage'
+import StatsPage from './pages/StatsPage'
 import './index.css'
 
 function RequireAuth({ children }) {
@@ -34,6 +37,9 @@ function App() {
         <Route path="/motorcycles/new" element={<RequireAuth><CarFormPage defaultVehicleType="motorcycle" /></RequireAuth>} />
         <Route path="/cars/:carId/maintenances/new" element={<RequireAuth><MaintenanceFormPage /></RequireAuth>} />
         <Route path="/cars/:carId/maintenances/:mid/edit" element={<RequireAuth><MaintenanceFormPage /></RequireAuth>} />
+        <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
+        <Route path="/stats" element={<RequireAuth><StatsPage /></RequireAuth>} />
+        <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
       </Routes>
     </BrowserRouter>
   )

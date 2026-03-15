@@ -1,7 +1,9 @@
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CarCard from '../components/CarCard'
-import { useAuth } from '../contexts/AuthContext'
+import UserMenu from '../components/UserMenu'
 import { getCars } from '../hooks/useCars'
 import { getMaintenancesByCar } from '../hooks/useMaintenances'
 import { getCarStatus, getMaintenanceStatus } from '../utils/alertLogic'
@@ -19,12 +21,13 @@ const STATUS_CONFIG = {
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const [vehicles, setVehicles] = useState([])
   const [statusMap, setStatusMap] = useState({})
-  const [alerts, setAlerts] = useState([]) // { vehicle, maintenance, status }
+  const [alerts, setAlerts] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('car')
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     getCars()
@@ -50,6 +53,56 @@ export default function DashboardPage() {
       .catch(console.error)
       .finally(() => setLoading(false))
   }, [])
+
+  async function exportAll() {
+    setExporting(true)
+    try {
+      const cars = await getCars()
+      const doc = new jsPDF()
+      doc.setFontSize(20)
+      doc.text('PitStop — Todos los vehículos', 14, 18)
+      doc.setFontSize(10)
+      doc.setTextColor(120)
+      doc.text(`Generado el ${new Date().toLocaleDateString('es-ES')}`, 14, 26)
+
+      let y = 34
+      for (const car of cars) {
+        const maintenances = await getMaintenancesByCar(car.id)
+        doc.setTextColor(0)
+        doc.setFontSize(13)
+        doc.text(`${car.brand} ${car.model}${car.year ? ` (${car.year})` : ''}`, 14, y)
+        doc.setFontSize(9)
+        doc.setTextColor(100)
+        doc.text(`${car.current_km.toLocaleString()} km${car.plate ? ' · ' + car.plate : ''}`, 14, y + 6)
+        y += 12
+
+        if (maintenances.length === 0) {
+          doc.setFontSize(9)
+          doc.text('Sin mantenimientos registrados', 14, y)
+          y += 10
+        } else {
+          autoTable(doc, {
+            startY: y,
+            head: [['Tipo', 'Fecha', 'Km', 'Coste']],
+            body: maintenances.map(m => [
+              getTypeLabel(m.type, m.label),
+              m.done_at ? new Date(m.done_at).toLocaleDateString('es-ES') : '—',
+              m.done_km ? `${m.done_km.toLocaleString()} km` : '—',
+              m.cost != null ? `${Number(m.cost).toFixed(2)} €` : '—',
+            ]),
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [37, 99, 235] },
+            margin: { left: 14, right: 14 },
+          })
+          y = doc.lastAutoTable.finalY + 12
+        }
+        if (y > 250) { doc.addPage(); y = 20 }
+      }
+      doc.save('PitStop_todos_los_vehiculos.pdf')
+    } finally {
+      setExporting(false)
+    }
+  }
 
   const tab = TABS.find(t => t.key === activeTab)
   const filtered = vehicles.filter(v => (v.vehicle_type ?? 'car') === activeTab)
@@ -79,9 +132,7 @@ export default function DashboardPage() {
         {/* User bar */}
         <div className="flex items-center justify-between bg-white rounded-xl px-4 py-2 mb-4 shadow-sm">
           <p className="text-xs text-gray-500 truncate max-w-[200px]">{user?.email}</p>
-          <button onClick={signOut} className="text-xs text-red-500 font-medium shrink-0 ml-2">
-            Salir
-          </button>
+          <UserMenu onExportAll={exportAll} exporting={exporting} />
         </div>
 
         {/* Recordatorios urgentes */}
