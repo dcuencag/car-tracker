@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "id": "2026-03-15-landing-page",
+  "title": "Landing Page HTML estática para SanzClima",
+  "description": "Página de presentación de SanzClima que muestra las funcionalidades principales de la app, es mobile-first, moderna y con un CTA claro para acceder a la app. Todo en un único archivo HTML autocontenido.",
+  "original_request": "landing page HTML estática",
+  "created_at": "2026-03-15T14:36:51Z",
+  "updated_at": "2026-03-15T14:36:51Z",
+  "status": "prd_created",
+  "current_phase": "prd",
+  "tasks": []
+}

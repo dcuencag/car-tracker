@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SanzClima — Lleva el control del mantenimiento de tus coches y motos desde el móvil." />
+  <title>SanzClima — Control de mantenimiento de vehículos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: '#2563eb', 'brand-dark': '#1d4ed8' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-white text-gray-900 antialiased">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
+    <div class="max-w-5xl mx-auto px-5 py-3 flex items-center justify-between">
+      <span class="font-extrabold text-lg tracking-tight text-brand">SanzClima</span>
+      <a href="/login"
+         class="text-sm font-semibold text-brand border border-brand rounded-lg px-4 py-2 hover:bg-blue-50 transition-colors">
+        Iniciar sesión
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+    <div class="absolute inset-0 opacity-10"
+         style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px),
+                radial-gradient(circle at 80% 20%, white 1px, transparent 1px);
+                background-size: 40px 40px;">
+    </div>
+    <div class="relative max-w-5xl mx-auto px-5 py-20 text-center">
+      <div class="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
+        <span>🚗</span> <span>Para coches y motos</span> <span>🏍️</span>
+      </div>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-5">
+        El mantenimiento de<br class="hidden md:block" />
+        tu vehículo, <span class="text-blue-200">bajo control</span>
+      </h1>
+      <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+        SanzClima te avisa cuando toca cambiar el aceite, revisar los neumáticos o pasar la ITV.
+        Todo desde el móvil, sin papel y sin olvidarte de nada.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/register"
+           class="bg-white text-brand font-bold px-8 py-4 rounded-2xl text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+          Empezar gratis
+        </a>
+        <a href="/login"
+           class="bg-white/20 text-white font-semibold px-8 py-4 rounded-2xl text-base border border-white/30 hover:bg-white/30 transition-colors">
+          Ya tengo cuenta
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VEHÍCULOS -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-5 text-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold mb-3">Para tu coche y tu moto</h2>
+      <p class="text-gray-500 mb-10 max-w-lg mx-auto">
+        Gestiona todos tus vehículos desde una sola app. Cada uno con su historial, sus alertas y su seguimiento.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-xl mx-auto">
+        <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center">
+          <div class="text-6xl mb-4">🚗</div>
+          <h3 class="font-bold text-lg mb-2">Coches</h3>
+          <p class="text-sm text-gray-500">Aceite, neumáticos, ITV, revisiones y cualquier mantenimiento personalizado.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 shadow-sm border border-gray-100 text-center">
+          <div class="text-6xl mb-4">🏍️</div>
+          <h3 class="font-bold text-lg mb-2">Motos</h3>
+          <p class="text-sm text-gray-500">Cadena, bujías, filtro de aire, frenos y mucho más. Específico para tu moto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNCIONALIDADES -->
+  <section class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-5">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-extrabold mb-3">Todo lo que necesitas</h2>
+        <p class="text-gray-500 max-w-lg mx-auto">Sin complicaciones. Abre la app, registra el mantenimiento y olvídate de recordarlo tú solo.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+
+        <div class="bg-gray-50 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl mb-4">🔔</div>
+          <h3 class="font-bold mb-2">Alertas inteligentes</h3>
+          <p class="text-sm text-gray-500">Semáforo verde / amarillo / rojo según km o fecha. Sabes de un vistazo qué vehículo necesita atención.</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-2xl mb-4">💰</div>
+          <h3 class="font-bold mb-2">Registro de gastos</h3>
+          <p class="text-sm text-gray-500">Añade el coste de cada mantenimiento y consulta el gasto total con desglose por tipo.</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-2xl mb-4">📄</div>
+          <h3 class="font-bold mb-2">Exportar a PDF</h3>
+          <p class="text-sm text-gray-500">Genera el historial completo de tu vehículo en PDF. Ideal para vender el coche o llevarlo al taller.</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-2xl mb-4">📷</div>
+          <h3 class="font-bold mb-2">Foto desde el móvil</h3>
+          <p class="text-sm text-gray-500">Haz una foto con la cámara o elige de la galería. Se guarda en la nube y se ve en todos tus dispositivos.</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center text-2xl mb-4">📱</div>
+          <h3 class="font-bold mb-2">Instálala en tu móvil</h3>
+          <p class="text-sm text-gray-500">Funciona como una app nativa. Añádela a tu pantalla de inicio y úsala sin abrir el navegador.</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-2xl p-6">
+          <div class="w-12 h-12 bg-rose-100 rounded-xl flex items-center justify-center text-2xl mb-4">🔒</div>
+          <h3 class="font-bold mb-2">Tus datos, solo tuyos</h3>
+          <p class="text-sm text-gray-500">Cada cuenta ve únicamente sus propios vehículos. Acceso seguro con email y contraseña.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="py-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white text-center">
+    <div class="max-w-xl mx-auto px-5">
+      <div class="text-5xl mb-5">🚀</div>
+      <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Empieza hoy. Es gratis.</h2>
+      <p class="text-blue-100 text-lg mb-8">
+        Añade tu primer vehículo en menos de un minuto y empieza a llevar el control de su mantenimiento.
+      </p>
+      <a href="/register"
+         class="inline-block bg-white text-brand font-bold px-10 py-4 rounded-2xl text-base shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+        Crear cuenta gratis
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+    <p class="font-semibold text-white mb-1">SanzClima</p>
+    <p>Control de mantenimiento para coches y motos</p>
+  </footer>
+
+</body>
+</html>
