@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "id": "2026-03-15-140000-auth-usuarios",
+  "title": "Sistema de Autenticación de Usuarios",
+  "description": "Cada persona se registra con email/contraseña y solo ve sus propios vehículos y mantenimientos. Supabase Auth + Row Level Security para aislar datos por usuario.",
+  "original_request": "Sistema de usuarios con autenticación. Cada persona se registra con email/contraseña y solo ve sus propios vehículos y mantenimientos. Usar Supabase Auth + Row Level Security para aislar los datos por usuario. Incluir pantallas de login, registro y logout.",
+  "created_at": "2026-03-15T14:00:00Z",
+  "updated_at": "2026-03-15T14:05:00Z",
+  "status": "completed",
+  "progress": 100,
+  "current_phase": "completed",
+  "tasks": [
+    {
+      "id": "001",
+      "slug": "migracion-rls",
+      "title": "Migración BD — user_id y Row Level Security",
+      "status": "completed",
+      "priority": 1,
+      "requisito": "RF-02, RF-07",
+      "depends_on": []
+    },
+    {
+      "id": "002",
+      "slug": "auth-contexto",
+      "title": "Contexto de Autenticación (AuthContext + useAuth)",
+      "status": "completed",
+      "priority": 1,
+      "requisito": "RF-03, RF-05",
+      "depends_on": []
+    },
+    {
+      "id": "003",
+      "slug": "paginas-auth",
+      "title": "Páginas de Login y Registro + Rutas Protegidas",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-01, RF-03, RF-04",
+      "depends_on": ["002"]
+    },
+    {
+      "id": "004",
+      "slug": "integracion-usuario",
+      "title": "Integración — user_id en datos y logout en dashboard",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-05, RF-06",
+      "depends_on": ["001", "002"]
+    }
+  ]
+}

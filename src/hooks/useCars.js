@@ -20,9 +20,10 @@ export async function getCarById(id) {
 }
 
 export async function createCar(car) {
+  const { data: { user } } = await supabase.auth.getUser()
   const { data, error } = await supabase
     .from('cars')
-    .insert([car])
+    .insert([{ ...car, user_id: user.id }])
     .select()
     .single()
   if (error) throw error

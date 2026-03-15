@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CarCard from '../components/CarCard'
+import { useAuth } from '../contexts/AuthContext'
 import { getCars } from '../hooks/useCars'
 import { getMaintenancesByCar } from '../hooks/useMaintenances'
 import { getCarStatus } from '../utils/alertLogic'
@@ -12,6 +13,7 @@ const TABS = [
 
 export default function DashboardPage() {
   const navigate = useNavigate()
+  const { user, signOut } = useAuth()
   const [vehicles, setVehicles] = useState([])
   const [statusMap, setStatusMap] = useState({})
   const [loading, setLoading] = useState(true)
@@ -55,6 +57,17 @@ export default function DashboardPage() {
             className="bg-blue-600 text-white rounded-full w-11 h-11 flex items-center justify-center text-2xl shadow-md active:scale-95"
           >
             +
+          </button>
+        </div>
+
+        {/* User bar */}
+        <div className="flex items-center justify-between bg-white rounded-xl px-4 py-2 mb-4 shadow-sm">
+          <p className="text-xs text-gray-500 truncate max-w-[200px]">{user?.email}</p>
+          <button
+            onClick={signOut}
+            className="text-xs text-red-500 font-medium shrink-0 ml-2"
+          >
+            Salir
           </button>
         </div>
 
