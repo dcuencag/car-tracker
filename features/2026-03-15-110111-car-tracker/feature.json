@@ -1,0 +1,86 @@
+{
+  "version": "1.0",
+  "id": "2026-03-15-110111-car-tracker",
+  "title": "Car Tracker - Registro y mantenimiento de vehículos",
+  "description": "App móvil-first para registrar tus coches, llevar el control de kilometraje, aceite, neumáticos, revisiones y cualquier mantenimiento. Incluye sistema de recordatorios y avisos visuales por km o fecha.",
+  "original_request": "car-tracker",
+  "created_at": "2026-03-15T11:01:11Z",
+  "updated_at": "2026-03-15T13:00:00Z",
+  "status": "completed",
+  "progress": 100,
+  "current_phase": "done",
+  "tasks": [
+    {
+      "id": "001",
+      "slug": "setup-proyecto",
+      "title": "Setup del Proyecto",
+      "status": "completed",
+      "priority": 1,
+      "requisito": "N/A",
+      "depends_on": []
+    },
+    {
+      "id": "002",
+      "slug": "crud-coches",
+      "title": "Registro y Gestión de Coches",
+      "status": "completed",
+      "priority": 1,
+      "requisito": "RF-01, RF-08",
+      "depends_on": ["001"]
+    },
+    {
+      "id": "003",
+      "slug": "dashboard-coches",
+      "title": "Dashboard de Coches",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-02",
+      "depends_on": ["002"]
+    },
+    {
+      "id": "004",
+      "slug": "actualizar-kilometraje",
+      "title": "Actualizar Kilometraje",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-07",
+      "depends_on": ["002"]
+    },
+    {
+      "id": "005",
+      "slug": "registro-mantenimientos",
+      "title": "Registro de Mantenimientos",
+      "status": "completed",
+      "priority": 1,
+      "requisito": "RF-04, RF-08",
+      "depends_on": ["002"]
+    },
+    {
+      "id": "006",
+      "slug": "historial-mantenimientos",
+      "title": "Historial de Mantenimientos",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-05",
+      "depends_on": ["005"]
+    },
+    {
+      "id": "007",
+      "slug": "indicadores-estado-alertas",
+      "title": "Indicadores de Estado y Alertas",
+      "status": "completed",
+      "priority": 2,
+      "requisito": "RF-03, RF-06",
+      "depends_on": ["004", "005", "006"]
+    },
+    {
+      "id": "008",
+      "slug": "mobile-first-deploy",
+      "title": "Optimización Mobile-First y Deploy",
+      "status": "completed",
+      "priority": 3,
+      "requisito": "RF-09, RNF-01, RNF-02, RNF-03, RNF-04",
+      "depends_on": ["003", "006", "007"]
+    }
+  ]
+}
